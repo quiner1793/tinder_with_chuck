@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
+import 'package:tinder_with_chuck/model/joke_model.dart';
+import 'dart:convert';
+
 
 void main() {
   runApp(MyApp());
@@ -13,7 +17,7 @@ class MyApp extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (context) => MyAppState(),
       child: MaterialApp(
-        title: 'Namer App',
+        title: 'Joke App',
         theme: ThemeData(
           useMaterial3: true,
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepOrange),
@@ -27,6 +31,13 @@ class MyApp extends StatelessWidget {
 class MyAppState extends ChangeNotifier {
   var currentJoke = "";
   var favoriteJokes = <String>[];
+
+  void updateJoke() async {
+    var result = await http.get(Uri.parse("https://api.chucknorris.io/jokes/random"));
+    Map<String, dynamic> data = await jsonDecode(result.body);
+
+    currentJoke = JokeModel.fromJson(data).value;
+  }
 }
 
 class MyHomePage extends StatefulWidget {
@@ -44,9 +55,12 @@ class _MyHomePageState extends State<MyHomePage> {
     Widget page;
     switch (pageIndex) {
       case 0:
-        page = JokePage();
+        page = SettingsPage();
         break;
       case 1:
+        page = JokePage();
+        break;
+      case 2:
         page = FavoritesPage();
         break;
       default:
@@ -54,9 +68,51 @@ class _MyHomePageState extends State<MyHomePage> {
     }
 
     return Scaffold(
-      body: Column(
-        children: [Text("Choose page")],
-      )
+      body: LayoutBuilder(
+        builder: (context, constraints) {
+            return Column(
+              children: [
+                Expanded(child: page),
+                SafeArea(
+                  child: BottomNavigationBar(
+                    items: [
+                      BottomNavigationBarItem(
+                        icon: Icon(Icons.settings),
+                        label: 'Settings',
+                      ),
+                      BottomNavigationBarItem(
+                        icon: Icon(Icons.home),
+                        label: 'Home',
+                      ),
+                      BottomNavigationBarItem(
+                        icon: Icon(Icons.favorite),
+                        label: 'Favorites',
+                      ),
+                    ],
+                    currentIndex: pageIndex,
+                    onTap: (value) {
+                      setState(() {
+                        pageIndex = value;
+                      });
+                    },
+                  ),
+                )
+              ],
+            );
+          }
+      ),
+    );
+  }
+}
+
+class SettingsPage extends StatelessWidget{
+  @override
+  Widget build(BuildContext context) {
+    var theme = Theme.of(context);
+    var appState = context.watch<MyAppState>();
+
+    return Center(
+      child: Text('No setting yet.'),
     );
   }
 }
@@ -68,11 +124,10 @@ class JokePage extends StatelessWidget {
     var appState = context.watch<MyAppState>();
     var joke = appState.currentJoke;
 
-
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
-        children: [Text("awesome joke")],
+        children: [Text(joke)],
       )
     );
   }
