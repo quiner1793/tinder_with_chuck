@@ -17,6 +17,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.7.1"
+  appinio_swiper:
+    dependency: "direct main"
+    description:
+      name: appinio_swiper
+      sha256: d1451cc9dbc06877dbcb035e507401584e8b9970aeb652b2ae387e03d15dfc86
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.1"
   args:
     dependency: transitive
     description:
@@ -161,14 +169,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.0.2"
-  cupertino_icons:
-    dependency: "direct main"
-    description:
-      name: cupertino_icons
-      sha256: e35129dc44c9118cee2a5603506d823bab99c68393879edb440e0090d07586be
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.0.5"
   dart_style:
     dependency: transitive
     description:
@@ -371,6 +371,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.8.2"
+  photo_card_swiper:
+    dependency: "direct main"
+    description:
+      name: photo_card_swiper
+      sha256: df020ef5ae95146feaa8cb15bdc09201f3d9b86319a9ecd9b593494cee6e1534
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.6"
   pool:
     dependency: transitive
     description:
@@ -546,4 +554,4 @@ packages:
     version: "3.1.1"
 sdks:
   dart: ">=2.19.2 <3.0.0"
-  flutter: ">=1.16.0"
+  flutter: ">=1.17.0"

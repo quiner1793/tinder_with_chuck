@@ -13,9 +13,10 @@ dependencies:
     sdk: flutter
 
   provider: ^6.0.0
-  cupertino_icons: ^1.0.2
+  photo_card_swiper: ^0.0.6
   http: ^0.13.5
   json_annotation: ^4.8.0
+  appinio_swiper: ^1.1.1
 
 
 dev_dependencies:
