@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import 'package:appinio_swiper/appinio_swiper.dart';
+import 'package:flutter_card_swiper/flutter_card_swiper.dart';
 
 class ExampleButton extends StatelessWidget {
   final Function onTap;
@@ -23,7 +23,7 @@ class ExampleButton extends StatelessWidget {
 }
 
 //swipe card to the right side
-Widget swipeRightButton(AppinioSwiperController controller) {
+Widget swipeRightButton(CardSwiperController controller) {
   return ExampleButton(
     onTap: () => controller.swipeRight(),
     child: Container(
@@ -52,7 +52,7 @@ Widget swipeRightButton(AppinioSwiperController controller) {
 }
 
 //swipe card to the left side
-Widget swipeLeftButton(AppinioSwiperController controller) {
+Widget swipeLeftButton(CardSwiperController controller) {
   return ExampleButton(
     onTap: () => controller.swipeLeft(),
     child: Container(

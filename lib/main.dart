@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
-import 'package:appinio_swiper/appinio_swiper.dart';
+import 'package:flutter_card_swiper/flutter_card_swiper.dart';
 
 import 'package:tinder_with_chuck/model/joke_model.dart';
 import 'joke_card_model.dart';
@@ -36,7 +36,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyAppState extends ChangeNotifier {
-  final _arrLength = 3;
+  final _arrLength = 2;
 
   List<JokeCard> cards = [];
 
@@ -76,9 +76,10 @@ class MyAppState extends ChangeNotifier {
     return JokeCard(jokeModel: JokeCardModel(text: text, color: color));
   }
 
-  void updateJokeList() async {
-    if (cards.isEmpty) {
+  void initJokeList() async{
+    if (cards.isEmpty){
       for (int i = 0; i < _arrLength; i++) {
+        print(i);
         var result = await http.get(
             Uri.parse("https://api.chucknorris.io/jokes/random"));
 
@@ -90,30 +91,32 @@ class MyAppState extends ChangeNotifier {
 
         cards.add(_getJokeCard(currentJokeModel));
       }
-      currentJoke = cards[cards.length - 1];
-      notifyListeners();
+    }
+    notifyListeners();
+  }
 
-    } else{
-      while (cards.length < _arrLength){
-        var result = await http.get(
-            Uri.parse("https://api.chucknorris.io/jokes/random"));
+  void updateJokeList(int index) async {
 
-        Map<String, dynamic> data = jsonDecode(result.body);
+    if (index >= 0 && index < cards.length){
+      var result = await http.get(
+          Uri.parse("https://api.chucknorris.io/jokes/random"));
 
-        var currentJokeModel = JokeModel
-            .fromJson(data)
-            .value;
+      Map<String, dynamic> data = jsonDecode(result.body);
 
-        cards.insert(0, _getJokeCard(currentJokeModel));
-      }
-      currentJoke = cards[cards.length - 1];
+      var currentJokeModel = JokeModel
+          .fromJson(data)
+          .value;
+
+      cards[index] = _getJokeCard(currentJokeModel);
     }
   }
 
-  void swipeJoke(int index, AppinioSwiperDirection direction){
+  void swipeJoke(int index, CardSwiperDirection  direction){
     print("the card index $index was swiped to the: ${direction.name}");
-    print(currentJoke.jokeModel.text);
-    updateJokeList();
+
+
+    print(cards.length);
+    updateJokeList(index);
   }
 }
 
@@ -130,7 +133,6 @@ class _MyHomePageState extends State<MyHomePage> {
     var colorScheme = Theme.of(context).colorScheme;
     var appState = context.watch<MyAppState>();
 
-
     Widget page;
     switch (pageIndex) {
       case 0:
@@ -138,7 +140,7 @@ class _MyHomePageState extends State<MyHomePage> {
         break;
       case 1:
         page = JokePage();
-        appState.updateJokeList();
+        appState.initJokeList();
         break;
       case 2:
         page = FavoritesPage();
@@ -202,10 +204,9 @@ class JokePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();
-    // appState.updateJokeList();
 
     List<JokeCard> cards = appState.cards;
-    AppinioSwiperController controller = AppinioSwiperController();
+    CardSwiperController controller = CardSwiperController();
 
     return CupertinoPageScaffold(
       child: Column(
@@ -218,12 +219,12 @@ class JokePage extends StatelessWidget {
                 .of(context)
                 .size
                 .height * 0.75,
-            child: AppinioSwiper(
-              allowUnswipe: false,
+            child: CardSwiper(
               controller: controller,
               cards: cards,
               onSwipe: appState.swipeJoke,
-              onEnd: appState.updateJokeList,
+              isVerticalSwipingEnabled: false,
+              isLoop: true,
               padding: const EdgeInsets.only(
                 left: 25,
                 right: 25,
@@ -235,7 +236,11 @@ class JokePage extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              swipeLeftButton(controller),
+              FloatingActionButton(
+                onPressed: () => controller.swipeLeft(),
+                child:  const Icon(Icons.close)
+              ),
+              // swipeLeftButton(controller),
               const SizedBox(
                 width: 20,
               ),
