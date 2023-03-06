@@ -11,7 +11,8 @@ class JokeModel {
   @override
   String toString() => value;
 
-  factory JokeModel.fromJson(Map<String, dynamic> json) => _$JokeModelFromJson(json);
+  factory JokeModel.fromJson(Map<String, dynamic> json) =>
+      _$JokeModelFromJson(json);
 
   Map<String, dynamic> toJson() => _$JokeModelToJson(this);
 }

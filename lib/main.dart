@@ -10,7 +10,6 @@ import 'package:flutter_card_swiper/flutter_card_swiper.dart';
 import 'package:tinder_with_chuck/model/joke_model.dart';
 import 'joke_card_model.dart';
 import 'joke_card.dart';
-import 'swipe_buttons.dart';
 
 void main() {
   runApp(MyApp());
@@ -36,16 +35,16 @@ class MyApp extends StatelessWidget {
 }
 
 class MyAppState extends ChangeNotifier {
-  final _arrLength = 2;
+  final _arrLength = 10;
 
   List<JokeCard> cards = [];
 
-  JokeCard currentJoke = JokeCard(
-      jokeModel: JokeCardModel(text: "", color: gradientRed));
+  JokeCard currentJoke =
+      JokeCard(jokeModel: JokeCardModel(text: "", color: gradientRed));
 
   List<JokeCard> favoriteJokes = [];
 
-  JokeCard _getJokeCard(String text){
+  JokeCard _getJokeCard(String text) {
     LinearGradient color;
 
     Random rnd;
@@ -53,7 +52,7 @@ class MyAppState extends ChangeNotifier {
     rnd = Random();
     var randInt = rnd.nextInt(max);
 
-    switch (randInt){
+    switch (randInt) {
       case 0:
         color = gradientRed;
         break;
@@ -76,46 +75,51 @@ class MyAppState extends ChangeNotifier {
     return JokeCard(jokeModel: JokeCardModel(text: text, color: color));
   }
 
-  void initJokeList() async{
-    if (cards.length < _arrLength){
-      for (int i = 0; i < _arrLength; i++) {
-        print(i);
-        var result = await http.get(
-            Uri.parse("https://api.chucknorris.io/jokes/random"));
-
-        Map<String, dynamic> data = jsonDecode(result.body);
-
-        var currentJokeModel = JokeModel
-            .fromJson(data)
-            .value;
-
-        cards.add(_getJokeCard(currentJokeModel));
-      }
-    }
-    // notifyListeners();
-  }
-
-  void updateJokeList(int index) async {
-
-    if (index >= 0 && index < cards.length){
-      var result = await http.get(
-          Uri.parse("https://api.chucknorris.io/jokes/random"));
+  void initJokeList() async {
+    while (cards.length < _arrLength) {
+      var result =
+          await http.get(Uri.parse("https://api.chucknorris.io/jokes/random"));
 
       Map<String, dynamic> data = jsonDecode(result.body);
 
-      var currentJokeModel = JokeModel
-          .fromJson(data)
-          .value;
+      var currentJokeModel = JokeModel.fromJson(data).value;
 
-      cards[index] = _getJokeCard(currentJokeModel);
+      cards.add(_getJokeCard(currentJokeModel));
     }
   }
 
-  void swipeJoke(int index, CardSwiperDirection  direction){
+  void updateJokeList(int index) async {
+    if (index >= 0 && index < cards.length) {
+      var result =
+          await http.get(Uri.parse("https://api.chucknorris.io/jokes/random"));
+
+      Map<String, dynamic> data = jsonDecode(result.body);
+
+      var currentJokeModel = JokeModel.fromJson(data).value;
+
+      cards[index] = _getJokeCard(currentJokeModel);
+    }
+
+    notifyListeners();
+  }
+
+  void addFavorite(JokeCard card) {
+    favoriteJokes.add(card);
+    notifyListeners();
+  }
+
+  void removeFavorite(JokeCard card) {
+    favoriteJokes.remove(card);
+    notifyListeners();
+  }
+
+  void swipeJoke(int index, CardSwiperDirection direction) {
     print("the card index $index was swiped to the: ${direction.name}");
+    if (direction.name == "right") {
+      addFavorite(cards[index]);
+      print("Favorite ${cards[index].jokeModel.text}");
+    }
 
-
-    print(cards.length);
     updateJokeList(index);
   }
 }
@@ -149,44 +153,42 @@ class _MyHomePageState extends State<MyHomePage> {
     }
 
     return Scaffold(
-      body: LayoutBuilder(
-        builder: (context, constraints) {
-            return Column(
-              children: [
-                Expanded(child: page),
-                SafeArea(
-                  child: BottomNavigationBar(
-                    items: [
-                      BottomNavigationBarItem(
-                        icon: Icon(Icons.info),
-                        label: 'Info',
-                      ),
-                      BottomNavigationBarItem(
-                        icon: Icon(Icons.home),
-                        label: 'Home',
-                      ),
-                      BottomNavigationBarItem(
-                        icon: Icon(Icons.favorite),
-                        label: 'Favorites',
-                      ),
-                    ],
-                    currentIndex: pageIndex,
-                    onTap: (value) {
-                      setState(() {
-                        pageIndex = value;
-                      });
-                    },
+      body: LayoutBuilder(builder: (context, constraints) {
+        return Column(
+          children: [
+            Expanded(child: page),
+            SafeArea(
+              child: BottomNavigationBar(
+                items: [
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.info),
+                    label: 'Info',
                   ),
-                )
-              ],
-            );
-          }
-      ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.home),
+                    label: 'Home',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.favorite),
+                    label: 'Favorites',
+                  ),
+                ],
+                currentIndex: pageIndex,
+                onTap: (value) {
+                  setState(() {
+                    pageIndex = value;
+                  });
+                },
+              ),
+            )
+          ],
+        );
+      }),
     );
   }
 }
 
-class InfoPage extends StatelessWidget{
+class InfoPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var colorScheme = Theme.of(context).colorScheme;
@@ -195,9 +197,7 @@ class InfoPage extends StatelessWidget{
       children: <Widget>[
         Container(
           height: 400,
-          decoration: BoxDecoration(
-            gradient: gradientRed
-          ),
+          decoration: BoxDecoration(gradient: gradientRed),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -279,15 +279,13 @@ class InfoPage extends StatelessWidget{
   }
 }
 
-
-
 class JokePage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();
 
     List<JokeCard> cards = appState.cards;
-    CardSwiperController controller = CardSwiperController();
+    final CardSwiperController controller = CardSwiperController();
 
     return CupertinoPageScaffold(
       child: Column(
@@ -296,10 +294,7 @@ class JokePage extends StatelessWidget {
             height: 50,
           ),
           SizedBox(
-            height: MediaQuery
-                .of(context)
-                .size
-                .height * 0.75,
+            height: MediaQuery.of(context).size.height * 0.75,
             child: CardSwiper(
               controller: controller,
               cards: cards,
@@ -318,23 +313,21 @@ class JokePage extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               FloatingActionButton(
-                onPressed: () => controller.swipeLeft(),
-                child:  const Icon(Icons.close)
-              ),
-              // swipeLeftButton(controller),
+                  onPressed: controller.swipeLeft,
+                  child: const Icon(Icons.close)),
               const SizedBox(
                 width: 20,
               ),
-              swipeRightButton(controller),
+              FloatingActionButton(
+                  onPressed: controller.swipeRight,
+                  child: const Icon(Icons.favorite)),
             ],
           )
         ],
       ),
     );
   }
-
 }
-
 
 class FavoritesPage extends StatelessWidget {
   @override
@@ -350,7 +343,29 @@ class FavoritesPage extends StatelessWidget {
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
-      children: [Text('You have ${appState.favoriteJokes.length} favorites')],
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(30),
+          child: Text('You have '
+              '${appState.favoriteJokes.length} favorites:'),
+        ),
+        Expanded(
+            child: ListView(
+          children: [
+            for (var jokeCard in appState.favoriteJokes)
+              ListTile(
+                leading: IconButton(
+                  icon: Icon(Icons.delete_outline, semanticLabel: 'Delete'),
+                  color: theme.colorScheme.primary,
+                  onPressed: () {
+                    appState.removeFavorite(jokeCard);
+                  },
+                ),
+                title: Text(jokeCard.jokeModel.text.toString()),
+              ),
+          ],
+        ))
+      ],
     );
   }
 }
