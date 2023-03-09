@@ -99,13 +99,10 @@ class MyAppState extends ChangeNotifier {
 
       cards[index] = _getJokeCard(currentJokeModel);
     }
-
-    notifyListeners();
   }
 
   void addFavorite(JokeCard card) {
     favoriteJokes.add(card);
-    notifyListeners();
   }
 
   void removeFavorite(JokeCard card) {
@@ -114,10 +111,8 @@ class MyAppState extends ChangeNotifier {
   }
 
   void swipeJoke(int index, CardSwiperDirection direction) {
-    print("the card index $index was swiped to the: ${direction.name}");
     if (direction.name == "right") {
       addFavorite(cards[index]);
-      print("Favorite ${cards[index].jokeModel.text}");
     }
 
     updateJokeList(index);
@@ -284,7 +279,7 @@ class JokePage extends StatelessWidget {
   Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();
 
-    List<JokeCard> cards = appState.cards;
+    final List<JokeCard> cards = appState.cards;
     final CardSwiperController controller = CardSwiperController();
 
     return CupertinoPageScaffold(
@@ -293,7 +288,8 @@ class JokePage extends StatelessWidget {
           const SizedBox(
             height: 50,
           ),
-          SizedBox(
+          Expanded(
+              child: SizedBox(
             height: MediaQuery.of(context).size.height * 0.75,
             child: CardSwiper(
               controller: controller,
@@ -308,7 +304,7 @@ class JokePage extends StatelessWidget {
                 bottom: 40,
               ),
             ),
-          ),
+          )),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -344,6 +340,9 @@ class FavoritesPage extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        const SizedBox(
+          height: 50,
+        ),
         Padding(
           padding: const EdgeInsets.all(30),
           child: Text('You have '
