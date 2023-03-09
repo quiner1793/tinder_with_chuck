@@ -1,16 +1,3 @@
-# tinder_with_chuck
+# Description
 
-One joke at a time that changes by tapping a button or swiping card
-
-## Getting Started
-
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+One joke at a time that changes by tapping a button or swiping card. App contains 3 pages: personal info page, joke page and list of favorite jokes. You can add jokes to list using swipe or pressing button. Also, you can delete jokes from list of favorites page.
