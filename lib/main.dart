@@ -306,9 +306,8 @@ class JokePage extends StatelessWidget {
             ),
           )),
           Row(
-            mainAxisAlignment:  MainAxisAlignment.spaceEvenly,
+            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-
               FloatingActionButton(
                   onPressed: controller.swipeLeft,
                   child: const Icon(Icons.close)),
