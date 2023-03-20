@@ -6,12 +6,20 @@ import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter_card_swiper/flutter_card_swiper.dart';
+import 'package:path/path.dart';
+import 'package:sqflite/sqflite.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'firebase_options.dart';
 
 import 'package:tinder_with_chuck/model/joke_model.dart';
 import 'joke_card_model.dart';
 import 'joke_card.dart';
 
-void main() {
+void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+
   runApp(MyApp());
 }
 
@@ -36,6 +44,25 @@ class MyApp extends StatelessWidget {
 
 class MyAppState extends ChangeNotifier {
   final _arrLength = 10;
+  late final Future<Database> database;
+
+  // MyAppState(){
+  //   _init();
+  // }
+  //
+  // Future _init() async {
+  //   database = openDatabase(
+  //     join(await getDatabasesPath(), 'joke_database.db'),
+  //     onCreate: (db, version) {
+  //       return db.execute(
+  //         'CREATE TABLE jokes(id INTEGER PRIMARY KEY, joke TEXT)',
+  //       );
+  //     },
+  //     version: 1,
+  //   );
+  //
+  //   print(await database.query('dogs');)
+  // }
 
   List<JokeCard> cards = [];
 
@@ -311,9 +338,7 @@ class JokePage extends StatelessWidget {
               FloatingActionButton(
                   onPressed: controller.swipeLeft,
                   child: const Icon(Icons.close)),
-              // const SizedBox(
-              //   width: 40,
-              // ),
+
               FloatingActionButton(
                   onPressed: controller.swipeRight,
                   child: const Icon(Icons.favorite)),
