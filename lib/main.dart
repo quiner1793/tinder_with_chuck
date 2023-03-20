@@ -18,8 +18,7 @@ import 'joke_card.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-
+  // await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(MyApp());
 }
 
@@ -44,7 +43,8 @@ class MyApp extends StatelessWidget {
 
 class MyAppState extends ChangeNotifier {
   final _arrLength = 10;
-  late final Future<Database> database;
+
+  // late final Future<Database> database;
 
   // MyAppState(){
   //   _init();
@@ -152,15 +152,195 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  var pageIndex = 0;
+  var _pageIndex = 0;
+  bool _loginPage = true;
+  bool _signUpPage = false;
 
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();
+    var colorScheme = Theme.of(context).colorScheme;
+
+    if (_loginPage){
+      final TextEditingController nameController = TextEditingController();
+      final TextEditingController passwordController = TextEditingController();
+
+      return Scaffold(
+          body: Padding(
+              padding: const EdgeInsets.all(50),
+              child: ListView(
+                children: <Widget>[
+                  Container(
+                      alignment: Alignment.center,
+                      padding: const EdgeInsets.all(10),
+                      child: Text(
+                        'Tinder with Chuck Norris',
+                        style: TextStyle(
+                            color: colorScheme.primary,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 30),
+                      )),
+                  Container(
+                      alignment: Alignment.center,
+                      padding: const EdgeInsets.all(10),
+                      child: const Text(
+                        'Welcome back',
+                        style: TextStyle(fontSize: 20),
+                      )),
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    child: TextField(
+                      controller: nameController,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'Email',
+                      ),
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                    child: TextField(
+                      obscureText: true,
+                      controller: passwordController,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'Password',
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  Container(
+                      height: 50,
+                      padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                      child: ElevatedButton(
+                        child: const Text('Log in'),
+                        onPressed: () {
+                          print(nameController.text);
+                          print(passwordController.text);
+                        },
+                      )
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      const Text('Does not have an account?'),
+                      TextButton(
+                        child: const Text(
+                          'Sign in',
+                          style: TextStyle(fontSize: 20),
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _loginPage = false;
+                            _signUpPage = true;
+                          });
+                        },
+                      )
+                    ],
+                  ),
+                ],
+              )
+          )
+      );
+    }
+
+    if (_signUpPage){
+      final TextEditingController nameController = TextEditingController();
+      final TextEditingController passwordController = TextEditingController();
+
+      return Scaffold(
+          body: Padding(
+              padding: const EdgeInsets.all(50),
+              child: ListView(
+                children: <Widget>[
+                  Container(
+                      alignment: Alignment.center,
+                      padding: const EdgeInsets.all(10),
+                      child: Text(
+                        'Tinder with Chuck Norris',
+                        style: TextStyle(
+                            color: colorScheme.primary,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 30),
+                      )),
+                  Container(
+                      alignment: Alignment.center,
+                      padding: const EdgeInsets.all(10),
+                      child: const Text(
+                        'Sign In',
+                        style: TextStyle(fontSize: 20),
+                      )),
+                  Container(
+                    padding: const EdgeInsets.all(10),
+                    child: TextField(
+                      controller: nameController,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'Email',
+                      ),
+                    ),
+                  ),
+                  Container(
+                    padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                    child: TextField(
+                      obscureText: true,
+                      controller: passwordController,
+                      decoration: const InputDecoration(
+                        border: OutlineInputBorder(),
+                        labelText: 'Password',
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  Container(
+                      height: 50,
+                      padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                      child: ElevatedButton(
+                        child: const Text('Register'),
+                        onPressed: () {
+                          print(nameController.text);
+                          print(passwordController.text);
+                        },
+                      )
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      const Text('Already have an account?'),
+                      TextButton(
+                        child: const Text(
+                          'Log in',
+                          style: TextStyle(fontSize: 20),
+                        ),
+                        onPressed: () {
+                          setState(() {
+                            _loginPage = true;
+                            _signUpPage = false;
+                          });
+                        },
+                      )
+                    ],
+                  ),
+                ],
+              )
+          )
+      );
+    }
+
     appState.initJokeList();
 
     Widget page;
-    switch (pageIndex) {
+    switch (_pageIndex) {
       case 0:
         page = InfoPage();
         break;
@@ -171,7 +351,7 @@ class _MyHomePageState extends State<MyHomePage> {
         page = FavoritesPage();
         break;
       default:
-        throw UnimplementedError('no widget for $pageIndex');
+        throw UnimplementedError('no widget for $_pageIndex');
     }
 
     return Scaffold(
@@ -195,10 +375,10 @@ class _MyHomePageState extends State<MyHomePage> {
                     label: 'Favorites',
                   ),
                 ],
-                currentIndex: pageIndex,
+                currentIndex: _pageIndex,
                 onTap: (value) {
                   setState(() {
-                    pageIndex = value;
+                    _pageIndex = value;
                   });
                 },
               ),
