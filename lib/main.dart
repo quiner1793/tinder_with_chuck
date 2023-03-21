@@ -11,6 +11,7 @@ import 'package:sqflite/sqflite.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'firebase_options.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:tinder_with_chuck/model/joke_model.dart';
 import 'joke_card_model.dart';
@@ -18,7 +19,7 @@ import 'joke_card.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
-  // await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(MyApp());
 }
 
@@ -156,13 +157,103 @@ class _MyHomePageState extends State<MyHomePage> {
   bool _loginPage = true;
   bool _signUpPage = false;
 
+  _showAlertDialog(BuildContext context, String message) {
+
+    Widget okButton = TextButton(
+      child: Text("OK"),
+      onPressed: () {
+        Navigator.of(context).pop();
+      },
+    );
+
+    AlertDialog alert = AlertDialog(
+      title: Text("Error"),
+      content: Text(message),
+      actions: [
+        okButton,
+      ],
+    );
+
+    // show the dialog
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return alert;
+      },
+    );
+  }
+
+  void _signInUser(String email, String password, BuildContext context) async{
+    final bool emailValid =
+    RegExp(r"""
+^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+""")
+        .hasMatch(email);
+    if (!emailValid && _loginPage){
+      _showAlertDialog(context, 'Invalid email.');
+    } else{
+      try {
+        final credential = await FirebaseAuth.instance.signInWithEmailAndPassword(
+            email: email,
+            password: password
+        );
+        setState(() {
+          _loginPage = false;
+          _signUpPage = false;
+        });
+      } on FirebaseAuthException catch (e) {
+        if (e.code == 'user-not-found') {
+          if (_loginPage){
+            _showAlertDialog(context, 'No user found for that email.');
+          }
+        } else if (e.code == 'wrong-password') {
+          if (_loginPage){
+            _showAlertDialog(context, 'Wrong password provided for that user.');
+          }
+        }
+      }
+    }
+  }
+
+  void _registerUser(String email, String password, BuildContext context) async{
+    final bool emailValid =
+    RegExp(r"""
+^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+""")
+        .hasMatch(email);
+    if (!emailValid && _signUpPage){
+      _showAlertDialog(context, 'Invalid email.');
+    } else {
+      try {
+        final credential = await FirebaseAuth.instance
+            .createUserWithEmailAndPassword(
+          email: email,
+          password: password,
+        );
+      } on FirebaseAuthException catch (e) {
+        if (e.code == 'weak-password') {
+          if (_signUpPage) {
+            _showAlertDialog(context, 'The password provided is too weak.');
+          }
+        } else if (e.code == 'email-already-in-use') {
+          if (_loginPage) {
+            _showAlertDialog(
+                context, 'The account already exists for that email.');
+          }
+        }
+      } catch (e) {
+        if (_signUpPage) {
+          _showAlertDialog(context, e.toString());
+        }
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     var appState = context.watch<MyAppState>();
     var colorScheme = Theme.of(context).colorScheme;
 
     if (_loginPage){
-      final TextEditingController nameController = TextEditingController();
+      final TextEditingController emailController = TextEditingController();
       final TextEditingController passwordController = TextEditingController();
 
       return Scaffold(
@@ -190,7 +281,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   Container(
                     padding: const EdgeInsets.all(10),
                     child: TextField(
-                      controller: nameController,
+                      controller: emailController,
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         labelText: 'Email',
@@ -217,8 +308,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       child: ElevatedButton(
                         child: const Text('Log in'),
                         onPressed: () {
-                          print(nameController.text);
-                          print(passwordController.text);
+                          _signInUser(emailController.text, passwordController.text, context);
                         },
                       )
                   ),
@@ -250,7 +340,7 @@ class _MyHomePageState extends State<MyHomePage> {
     }
 
     if (_signUpPage){
-      final TextEditingController nameController = TextEditingController();
+      final TextEditingController emailController = TextEditingController();
       final TextEditingController passwordController = TextEditingController();
 
       return Scaffold(
@@ -278,7 +368,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   Container(
                     padding: const EdgeInsets.all(10),
                     child: TextField(
-                      controller: nameController,
+                      controller: emailController,
                       decoration: const InputDecoration(
                         border: OutlineInputBorder(),
                         labelText: 'Email',
@@ -305,8 +395,8 @@ class _MyHomePageState extends State<MyHomePage> {
                       child: ElevatedButton(
                         child: const Text('Register'),
                         onPressed: () {
-                          print(nameController.text);
-                          print(passwordController.text);
+                          _registerUser(emailController.text, passwordController.text, context);
+                          _signInUser(emailController.text, passwordController.text, context);
                         },
                       )
                   ),
