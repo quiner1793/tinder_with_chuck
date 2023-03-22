@@ -20,6 +20,7 @@ dependencies:
   cloud_firestore: ^4.4.5
   firebase_auth: ^4.3.0
   flutter_riverpod: ^2.3.2
+  flutterfire_ui: ^0.4.3+20
 
 
 dev_dependencies:
