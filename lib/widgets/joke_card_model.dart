@@ -1,4 +1,8 @@
+import 'dart:math';
+
 import 'package:flutter/cupertino.dart';
+
+import 'joke_card.dart';
 
 class JokeCardModel {
   String? text;
@@ -56,3 +60,34 @@ const LinearGradient kNewFeedCardColorsIdentityGradient = LinearGradient(
     Color(0xFFE1A5C9),
   ],
 );
+
+JokeCard getJokeCard(String text) {
+  LinearGradient color;
+
+  Random rnd;
+  int max = numberOfColorGradients;
+  rnd = Random();
+  var randInt = rnd.nextInt(max);
+
+  switch (randInt) {
+    case 0:
+      color = gradientRed;
+      break;
+    case 1:
+      color = gradientPurple;
+      break;
+    case 2:
+      color = gradientBlue;
+      break;
+    case 3:
+      color = gradientPink;
+      break;
+    case 4:
+      color = kNewFeedCardColorsIdentityGradient;
+      break;
+    default:
+      throw UnimplementedError('No color gradient for $randInt');
+  }
+
+  return JokeCard(jokeModel: JokeCardModel(text: text, color: color));
+}
