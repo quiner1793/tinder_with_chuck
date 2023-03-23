@@ -52,7 +52,7 @@ class MyHomePage extends ConsumerWidget {
                   ref.read(homePageProvider.notifier).state = value;
                 },
               ),
-            )
+            ),
           ],
         );
       }),

@@ -6,7 +6,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../provider/favorites_provider.dart';
 import '../provider/joke_provider.dart';
-import '../widgets/joke_card.dart';
 
 class JokePage extends ConsumerWidget {
   Future<void> _signOut() async {
@@ -16,7 +15,7 @@ class JokePage extends ConsumerWidget {
   void _swipeJoke(
       int index, CardSwiperDirection direction, WidgetRef ref) async {
     var currentJoke = ref.watch(jokesProvider).jokes[index];
-    if (direction.name == "right") {
+    if (direction == CardSwiperDirection.right) {
       ref.read(favoritesProvider.notifier).addFavorite(currentJoke);
     }
     ref.read(jokesProvider.notifier).updateJokeList(index);
@@ -28,9 +27,9 @@ class JokePage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final List<JokeCard> cards = ref.watch(jokesProvider).jokes;
+    final cards = ref.watch(jokesProvider).jokes;
     final isLoading = ref.watch(jokesProvider).isLoading;
-    final CardSwiperController controller = CardSwiperController();
+    final controller = CardSwiperController();
 
     return isLoading
         ? Center(
@@ -53,24 +52,25 @@ class JokePage extends ConsumerWidget {
                   height: 30,
                 ),
                 Expanded(
-                    child: SizedBox(
-                  height: MediaQuery.of(context).size.height * 0.75,
-                  child: CardSwiper(
-                    controller: controller,
-                    cards: cards,
-                    onSwipe: (int index, CardSwiperDirection direction) {
-                      _swipeJoke(index, direction, ref);
-                    },
-                    isVerticalSwipingEnabled: false,
-                    isLoop: true,
-                    padding: const EdgeInsets.only(
-                      left: 25,
-                      right: 25,
-                      top: 50,
-                      bottom: 40,
+                  child: SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.75,
+                    child: CardSwiper(
+                      controller: controller,
+                      cards: cards,
+                      onSwipe: (int index, CardSwiperDirection direction) {
+                        _swipeJoke(index, direction, ref);
+                      },
+                      isVerticalSwipingEnabled: false,
+                      isLoop: true,
+                      padding: const EdgeInsets.only(
+                        left: 25,
+                        right: 25,
+                        top: 50,
+                        bottom: 40,
+                      ),
                     ),
                   ),
-                )),
+                ),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [

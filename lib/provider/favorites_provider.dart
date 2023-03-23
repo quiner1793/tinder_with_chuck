@@ -38,6 +38,6 @@ class FavoritesNotifier extends StateNotifier<FavoritesState> {
   }
 
   void removeFavorite(String joke) {
-    print("remove ${joke}");
+    print("remove $joke");
   }
 }

@@ -7,8 +7,8 @@ class FavoritesPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var theme = Theme.of(context);
-    final List<String> jokeList = ref.watch(favoritesProvider).jokes;
-    final bool isLoading = ref.watch(favoritesProvider).isLoading;
+    final jokeList = ref.watch(favoritesProvider).jokes;
+    final isLoading = ref.watch(favoritesProvider).isLoading;
 
     return isLoading
         ? Center(
@@ -26,24 +26,25 @@ class FavoritesPage extends ConsumerWidget {
                     '${jokeList.length} favorites:'),
               ),
               Expanded(
-                  child: ListView(
-                children: [
-                  for (var joke in jokeList)
-                    ListTile(
-                      leading: IconButton(
-                        icon:
-                            Icon(Icons.delete_outline, semanticLabel: 'Delete'),
-                        color: theme.colorScheme.primary,
-                        onPressed: () {
-                          ref
-                              .read(favoritesProvider.notifier)
-                              .removeFavorite(joke);
-                        },
+                child: ListView(
+                  children: [
+                    for (var joke in jokeList)
+                      ListTile(
+                        leading: IconButton(
+                          icon: Icon(Icons.delete_outline,
+                              semanticLabel: 'Delete'),
+                          color: theme.colorScheme.primary,
+                          onPressed: () {
+                            ref
+                                .read(favoritesProvider.notifier)
+                                .removeFavorite(joke);
+                          },
+                        ),
+                        title: Text(joke),
                       ),
-                      title: Text(joke),
-                    ),
-                ],
-              ))
+                  ],
+                ),
+              ),
             ],
           );
   }

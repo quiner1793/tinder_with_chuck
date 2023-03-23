@@ -22,7 +22,7 @@ class JokeCard extends StatelessWidget {
             spreadRadius: 3,
             blurRadius: 7,
             offset: const Offset(0, 3),
-          )
+          ),
         ],
       ),
       alignment: Alignment.center,
