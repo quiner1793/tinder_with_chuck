@@ -9,7 +9,6 @@ import '../provider/joke_provider.dart';
 import '../widgets/joke_card.dart';
 
 class JokePage extends ConsumerWidget {
-
   Future<void> _signOut() async {
     await FirebaseAuth.instance.signOut();
   }
@@ -23,7 +22,7 @@ class JokePage extends ConsumerWidget {
     ref.read(jokesProvider.notifier).updateJokeList(index);
   }
 
-  void _showSearch(){
+  void _showSearch() {
     print("Search");
   }
 
@@ -35,26 +34,26 @@ class JokePage extends ConsumerWidget {
 
     return isLoading
         ? Center(
-        child: SizedBox(
-            width: 30, height: 30, child: CircularProgressIndicator()))
+            child: SizedBox(
+                width: 30, height: 30, child: CircularProgressIndicator()))
         : CupertinoPageScaffold(
-        navigationBar:  CupertinoNavigationBar(
-          leading: IconButton(
-            onPressed: _signOut,
-            icon: Icon(Icons.logout_rounded),
-          ),
-          trailing: IconButton(
-            onPressed: _showSearch,
-            icon: Icon(Icons.search_rounded),
-          ),
-        ),
-        child: Column(
-          children: [
-            const SizedBox(
-              height: 30,
+            navigationBar: CupertinoNavigationBar(
+              leading: IconButton(
+                onPressed: _signOut,
+                icon: Icon(Icons.logout_rounded),
+              ),
+              trailing: IconButton(
+                onPressed: _showSearch,
+                icon: Icon(Icons.search_rounded),
+              ),
             ),
-            Expanded(
-                child: SizedBox(
+            child: Column(
+              children: [
+                const SizedBox(
+                  height: 30,
+                ),
+                Expanded(
+                    child: SizedBox(
                   height: MediaQuery.of(context).size.height * 0.75,
                   child: CardSwiper(
                     controller: controller,
@@ -72,22 +71,22 @@ class JokePage extends ConsumerWidget {
                     ),
                   ),
                 )),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                FloatingActionButton(
-                    onPressed: controller.swipeLeft,
-                    child: const Icon(Icons.close)),
-                FloatingActionButton(
-                    onPressed: controller.swipeRight,
-                    child: const Icon(Icons.favorite)),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    FloatingActionButton(
+                        onPressed: controller.swipeLeft,
+                        child: const Icon(Icons.close)),
+                    FloatingActionButton(
+                        onPressed: controller.swipeRight,
+                        child: const Icon(Icons.favorite)),
+                  ],
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
               ],
             ),
-            const SizedBox(
-              height: 10,
-            ),
-          ],
-        ),
-    );
+          );
   }
 }
