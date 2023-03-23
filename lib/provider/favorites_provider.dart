@@ -35,6 +35,12 @@ class FavoritesNotifier extends StateNotifier<FavoritesState> {
     loadFavoritesList();
   }
 
+  void _updateFavoritesDB(List<String> jokeList) {
+    _databaseRef.child(_uid).update({
+      'favorites': jokeList,
+    });
+  }
+
   void loadFavoritesList() async {
     state = state.copyWith(isLoading: true);
 
@@ -47,9 +53,7 @@ class FavoritesNotifier extends StateNotifier<FavoritesState> {
             favorites.map((e) => e.toString()).toList();
         state = state.copyWith(jokes: favoritesList);
       } else {
-        _databaseRef.child(_uid).update({
-          'favorites': [],
-        });
+        _updateFavoritesDB([]);
       }
     } on FirebaseException catch (e) {
       print(e);
@@ -63,15 +67,22 @@ class FavoritesNotifier extends StateNotifier<FavoritesState> {
 
       List<String> jokes = [for (final joke in state.jokes) joke];
       jokes.add(card.jokeModel.text!);
-      _databaseRef.child(_uid).update({
-        'favorites': jokes,
-      });
+      _updateFavoritesDB(jokes);
 
       state = state.copyWith(isLoading: false, jokes: jokes);
     }
   }
 
-  void removeFavorite(String joke) {
-    print("remove $joke");
+  void removeFavorite(String jokeToRemove) {
+    state = state.copyWith(isLoading: true);
+    List<String> jokes = [];
+    for (final joke in state.jokes) {
+      if (joke != jokeToRemove) {
+        jokes.add(joke);
+      }
+    }
+    _updateFavoritesDB(jokes);
+
+    state = state.copyWith(isLoading: false, jokes: jokes);
   }
 }

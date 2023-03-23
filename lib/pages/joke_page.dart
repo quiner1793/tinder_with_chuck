@@ -7,7 +7,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../provider/favorites_provider.dart';
 import '../provider/joke_provider.dart';
 
-
 class JokePage extends ConsumerWidget {
   final cardsSwiperController = CardSwiperController();
 

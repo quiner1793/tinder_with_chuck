@@ -19,7 +19,6 @@ class AuthPage extends ConsumerWidget {
             ],
           );
         }
-
         return MyHomePage();
       },
     );
