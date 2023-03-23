@@ -7,7 +7,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../provider/favorites_provider.dart';
 import '../provider/joke_provider.dart';
 
+
 class JokePage extends ConsumerWidget {
+  final cardsSwiperController = CardSwiperController();
+
   Future<void> _signOut() async {
     await FirebaseAuth.instance.signOut();
   }
@@ -29,7 +32,6 @@ class JokePage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final cards = ref.watch(jokesProvider).jokes;
     final isLoading = ref.watch(jokesProvider).isLoading;
-    final controller = CardSwiperController();
 
     return isLoading
         ? Center(
@@ -55,7 +57,7 @@ class JokePage extends ConsumerWidget {
                   child: SizedBox(
                     height: MediaQuery.of(context).size.height * 0.75,
                     child: CardSwiper(
-                      controller: controller,
+                      controller: cardsSwiperController,
                       cards: cards,
                       onSwipe: (int index, CardSwiperDirection direction) {
                         _swipeJoke(index, direction, ref);
@@ -75,10 +77,10 @@ class JokePage extends ConsumerWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     FloatingActionButton(
-                        onPressed: controller.swipeLeft,
+                        onPressed: cardsSwiperController.swipeLeft,
                         child: const Icon(Icons.close)),
                     FloatingActionButton(
-                        onPressed: controller.swipeRight,
+                        onPressed: cardsSwiperController.swipeRight,
                         child: const Icon(Icons.favorite)),
                   ],
                 ),

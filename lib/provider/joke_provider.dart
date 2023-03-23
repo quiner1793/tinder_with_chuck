@@ -50,6 +50,7 @@ class JokeNotifier extends StateNotifier<JokeState> {
 
   void updateJokeList(int index) async {
     if (index >= 0 && index < _jokeListLength) {
+
       List<JokeCard> jokes = [for (final joke in state.jokes) joke];
 
       var result =
