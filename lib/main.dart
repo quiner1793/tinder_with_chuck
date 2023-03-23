@@ -6,8 +6,6 @@ import 'firebase_options.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tinder_with_chuck/pages/auth_page.dart';
 
-final homePageProvider = StateProvider((ref) => 0);
-
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);

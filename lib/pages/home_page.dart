@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../main.dart';
 import 'favorites_page.dart';
 import 'info_page.dart';
 import 'joke_page.dart';
+
+final homePageProvider = StateProvider((ref) => 0);
 
 class MyHomePage extends ConsumerWidget {
   @override
