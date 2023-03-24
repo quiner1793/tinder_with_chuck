@@ -8,7 +8,9 @@ import '../provider/favorites_provider.dart';
 import '../provider/joke_provider.dart';
 
 class JokePage extends ConsumerWidget {
-  final cardsSwiperController = CardSwiperController();
+  JokePage(WidgetRef ref) {
+    ref.read(jokesProvider.notifier).loadNewController();
+  }
 
   Future<void> _signOut() async {
     await FirebaseAuth.instance.signOut();
@@ -23,34 +25,51 @@ class JokePage extends ConsumerWidget {
     ref.read(jokesProvider.notifier).updateJokeList(index);
   }
 
-  void _showSearch() {
-    print("Search");
-  }
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final cards = ref.watch(jokesProvider).jokes;
     final isLoading = ref.watch(jokesProvider).isLoading;
+    final categoryList = ref.watch(jokesProvider).jokeCategories;
+    final currentCategory = ref.watch(jokesProvider).currentCategory;
+    final cardsSwiperController = cardSwiperController;
+
+    List<PopupMenuItem<int>> menuList = [];
+
+    for (var categoryIndx = 0;
+        categoryIndx < categoryList.length;
+        categoryIndx++) {
+      menuList.add(PopupMenuItem(
+        child: Text(categoryList[categoryIndx]),
+        onTap: () => {
+          ref
+              .read(jokesProvider.notifier)
+              .changeCurrentCategory(categoryList[categoryIndx])
+        },
+      ));
+    }
 
     return isLoading
         ? Center(
             child: SizedBox(
                 width: 30, height: 30, child: CircularProgressIndicator()))
         : CupertinoPageScaffold(
-            navigationBar: CupertinoNavigationBar(
-              leading: IconButton(
-                onPressed: _signOut,
-                icon: Icon(Icons.logout_rounded),
-              ),
-              trailing: IconButton(
-                onPressed: _showSearch,
-                icon: Icon(Icons.search_rounded),
-              ),
-            ),
             child: Column(
               children: [
                 const SizedBox(
                   height: 30,
+                ),
+                Row(
+                  // mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    PopupMenuButton<int>(
+                      itemBuilder: (context) => menuList,
+                      icon: Icon(Icons.menu),
+                      constraints: const BoxConstraints(
+                        maxHeight: 5.0 * 56.0,
+                      ),
+                    ),
+                    Text("Category: $currentCategory"),
+                  ],
                 ),
                 Expanded(
                   child: SizedBox(

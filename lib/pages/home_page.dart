@@ -18,7 +18,7 @@ class MyHomePage extends ConsumerWidget {
         page = InfoPage();
         break;
       case 1:
-        page = JokePage();
+        page = JokePage(ref);
         break;
       case 2:
         page = FavoritesPage();
