@@ -26,23 +26,28 @@ class FavoritesPage extends ConsumerWidget {
                     '${jokeList.length} favorites:'),
               ),
               Expanded(
-                child: ListView(
-                  children: [
-                    for (var joke in jokeList)
-                      ListTile(
-                        leading: IconButton(
-                          icon: Icon(Icons.delete_outline,
-                              semanticLabel: 'Delete'),
-                          color: theme.colorScheme.primary,
-                          onPressed: () {
-                            ref
-                                .read(favoritesProvider.notifier)
-                                .removeFavorite(joke);
-                          },
+                child: ListView.builder(
+                  itemCount: jokeList.length,
+                  itemBuilder: (context, index) {
+                    return Column(
+                      children: <Widget>[
+                        ListTile(
+                          leading: IconButton(
+                            icon: Icon(Icons.delete_outline,
+                                semanticLabel: 'Delete'),
+                            color: theme.colorScheme.primary,
+                            onPressed: () {
+                              ref
+                                  .read(favoritesProvider.notifier)
+                                  .removeFavorite(jokeList[index]);
+                            },
+                          ),
+                          title: Text(jokeList[index]),
                         ),
-                        title: Text(joke),
-                      ),
-                  ],
+                        (index < jokeList.length - 1) ? Divider() : SizedBox.shrink(),
+                      ],
+                    );
+                  },
                 ),
               ),
             ],

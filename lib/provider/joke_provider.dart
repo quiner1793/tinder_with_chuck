@@ -17,7 +17,6 @@ CardSwiperController cardSwiperController = CardSwiperController();
 @freezed
 abstract class JokeState with _$JokeState {
   const factory JokeState({
-    // required CardSwiperController cardSwiperController,
     @Default([]) List<JokeCard> jokes,
     @Default([]) List<String> jokeCategories,
     @Default("all") String currentCategory,

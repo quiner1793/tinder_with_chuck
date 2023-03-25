@@ -69,6 +69,8 @@ class JokePage extends ConsumerWidget {
                       ),
                     ),
                     Text("Category: $currentCategory"),
+                    Spacer(),
+                    IconButton(onPressed: _signOut, icon: Icon(Icons.logout)),
                   ],
                 ),
                 Expanded(
