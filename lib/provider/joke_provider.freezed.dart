@@ -16,7 +16,6 @@ final _privateConstructorUsedError = UnsupportedError(
 
 /// @nodoc
 mixin _$JokeState {
-// required CardSwiperController cardSwiperController,
   List<JokeCard> get jokes => throw _privateConstructorUsedError;
   List<String> get jokeCategories => throw _privateConstructorUsedError;
   String get currentCategory => throw _privateConstructorUsedError;
@@ -138,9 +137,7 @@ class _$_JokeState extends _JokeState {
         _jokeCategories = jokeCategories,
         super._();
 
-// required CardSwiperController cardSwiperController,
   final List<JokeCard> _jokes;
-// required CardSwiperController cardSwiperController,
   @override
   @JsonKey()
   List<JokeCard> get jokes {
@@ -206,7 +203,7 @@ abstract class _JokeState extends JokeState {
       final dynamic isLoading}) = _$_JokeState;
   const _JokeState._() : super._();
 
-  @override // required CardSwiperController cardSwiperController,
+  @override
   List<JokeCard> get jokes;
   @override
   List<String> get jokeCategories;
