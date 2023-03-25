@@ -44,7 +44,9 @@ class FavoritesPage extends ConsumerWidget {
                           ),
                           title: Text(jokeList[index]),
                         ),
-                        (index < jokeList.length - 1) ? Divider() : SizedBox.shrink(),
+                        (index < jokeList.length - 1)
+                            ? Divider()
+                            : SizedBox.shrink(),
                       ],
                     );
                   },
