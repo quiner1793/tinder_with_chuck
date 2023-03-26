@@ -31,6 +31,7 @@ class FavoritesNotifier extends StateNotifier<FavoritesState> {
   FavoritesNotifier() : super(FavoritesState()) {
     _uid = FirebaseAuth.instance.currentUser!.uid;
     _databaseRef = FirebaseDatabase.instance.ref("users");
+    print(_uid);
 
     loadFavoritesList();
   }
