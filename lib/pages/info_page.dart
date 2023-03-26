@@ -87,7 +87,7 @@ class InfoPage extends StatelessWidget {
               ),
             ),
           ],
-        )
+        ),
       ],
     );
   }

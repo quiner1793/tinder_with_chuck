@@ -23,6 +23,7 @@ dependencies:
   flutterfire_ui: ^0.4.3+20
   freezed_annotation: ^2.2.0
   firebase_database: ^10.0.16
+  firebase_crashlytics: ^3.0.17
 
 
 dev_dependencies:
