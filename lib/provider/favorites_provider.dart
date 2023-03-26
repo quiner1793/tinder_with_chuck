@@ -31,7 +31,6 @@ class FavoritesNotifier extends StateNotifier<FavoritesState> {
   FavoritesNotifier() : super(FavoritesState()) {
     _uid = FirebaseAuth.instance.currentUser!.uid;
     _databaseRef = FirebaseDatabase.instance.ref("users");
-    print(_uid);
 
     loadFavoritesList();
   }
@@ -54,7 +53,7 @@ class FavoritesNotifier extends StateNotifier<FavoritesState> {
   }
 
   void loadFavoritesList() async {
-    if (_databaseRef != null && _uid != null){
+    if (_databaseRef != null && _uid != null) {
       state = state.copyWith(isLoading: true);
 
       try {
@@ -63,7 +62,7 @@ class FavoritesNotifier extends StateNotifier<FavoritesState> {
         if (snapshot.exists) {
           List<dynamic> favorites = json.decode(jsonEncode(snapshot.value));
           List<String> favoritesList =
-          favorites.map((e) => e.toString()).toList();
+              favorites.map((e) => e.toString()).toList();
           state = state.copyWith(jokes: favoritesList);
         } else {
           _updateFavoritesDB([]);

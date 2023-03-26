@@ -10,7 +10,6 @@ class AuthPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-
     FirebaseAuth.instance.authStateChanges().listen((User? user) {
       if (user != null) {
         ref.read(favoritesProvider.notifier).reInitAuthState();
