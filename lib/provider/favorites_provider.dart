@@ -31,6 +31,7 @@ class FavoritesNotifier extends StateNotifier<FavoritesState> {
   FavoritesNotifier() : super(FavoritesState()) {
     _uid = FirebaseAuth.instance.currentUser!.uid;
     _databaseRef = FirebaseDatabase.instance.ref("users");
+    print(_uid);
 
     loadFavoritesList();
   }
@@ -69,8 +70,10 @@ class FavoritesNotifier extends StateNotifier<FavoritesState> {
     if (card.jokeModel.text != null) {
       state = state.copyWith(isLoading: true);
 
-      List<String> jokes = [for (final joke in state.jokes) joke];
-      jokes.add(card.jokeModel.text!);
+      List<String> jokes = [card.jokeModel.text!];
+      for (final joke in state.jokes) {
+        jokes.add(joke);
+      }
       _updateFavoritesDB(jokes);
 
       state = state.copyWith(isLoading: false, jokes: jokes);

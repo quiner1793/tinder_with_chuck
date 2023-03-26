@@ -60,7 +60,7 @@ class JokePage extends ConsumerWidget {
             child: Column(
               children: [
                 const SizedBox(
-                  height: 30,
+                  height: 50,
                 ),
                 Row(
                   children: [
