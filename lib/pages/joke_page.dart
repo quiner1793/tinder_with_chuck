@@ -51,7 +51,11 @@ class JokePage extends ConsumerWidget {
     return isLoading
         ? Center(
             child: SizedBox(
-                width: 30, height: 30, child: CircularProgressIndicator()))
+              width: 30,
+              height: 30,
+              child: CircularProgressIndicator(),
+            ),
+          )
         : CupertinoPageScaffold(
             child: Column(
               children: [
@@ -59,7 +63,6 @@ class JokePage extends ConsumerWidget {
                   height: 30,
                 ),
                 Row(
-                  // mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     PopupMenuButton<int>(
                       itemBuilder: (context) => menuList,

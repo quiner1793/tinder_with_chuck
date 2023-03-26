@@ -52,40 +52,38 @@ class JokeNotifier extends StateNotifier<JokeState> {
     }
 
     List<JokeCard> jokes = [];
-    for (int i = 0; i < _jokeListLength; i++) {
-      var result = await http.get(Uri.parse(request));
 
-      Map<String, dynamic> data = jsonDecode(result.body);
+    try {
+      for (int i = 0; i < _jokeListLength; i++) {
+        var result = await http.get(Uri.parse(request));
 
-      var currentJokeModel = JokeModel.fromJson(data).value;
+        Map<String, dynamic> data = jsonDecode(result.body);
 
-      jokes.add(getJokeCard(currentJokeModel));
+        var currentJokeModel = JokeModel.fromJson(data).value;
+
+        jokes.add(getJokeCard(currentJokeModel));
+      }
+    } on Exception catch (e) {
+      print(e);
     }
+
     state = state.copyWith(jokes: jokes, isLoading: false);
   }
 
   void loadCategoriesList() async {
     state = state.copyWith(isLoading: true);
 
-    List<String> categories = [
-      "all",
-      "animal",
-      "career",
-      "celebrity",
-      "dev",
-      "explicit",
-      "fashion",
-      "food",
-      "history",
-      "money",
-      "movie",
-      "music",
-      "political",
-      "religion",
-      "science",
-      "sport",
-      "travel"
-    ];
+    List<String> categories = ["all"];
+
+    try {
+      var result = await http
+          .get(Uri.parse("https://api.chucknorris.io/jokes/categories"));
+
+      List<String> temp = json.decode(result.body).cast<String>().toList();
+      categories.addAll(temp);
+    } on Exception catch (e) {
+      print(e);
+    }
 
     state = state.copyWith(jokeCategories: categories);
   }
@@ -99,14 +97,25 @@ class JokeNotifier extends StateNotifier<JokeState> {
     if (index >= 0 && index < _jokeListLength) {
       List<JokeCard> jokes = [for (final joke in state.jokes) joke];
 
-      var result = await http.get(Uri.parse(
-          "https://api.chucknorris.io/jokes/random")); // TODO try catch for API calls
+      String request = "https://api.chucknorris.io/jokes/random";
 
-      Map<String, dynamic> data = jsonDecode(result.body);
+      if (state.currentCategory != "all") {
+        request =
+            "https://api.chucknorris.io/jokes/random?category=${state.currentCategory}";
+      }
 
-      var currentJokeModel = JokeModel.fromJson(data).value;
+      try {
+        var result = await http.get(Uri.parse(request));
 
-      jokes[index] = getJokeCard(currentJokeModel);
+        Map<String, dynamic> data = jsonDecode(result.body);
+
+        var currentJokeModel = JokeModel.fromJson(data).value;
+
+        jokes[index] = getJokeCard(currentJokeModel);
+      } on Exception catch (e) {
+        print(e);
+      }
+
       state = state.copyWith(isLoading: false, jokes: jokes);
     }
   }

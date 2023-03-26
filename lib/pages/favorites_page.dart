@@ -13,7 +13,11 @@ class FavoritesPage extends ConsumerWidget {
     return isLoading
         ? Center(
             child: SizedBox(
-                width: 30, height: 30, child: CircularProgressIndicator()))
+              width: 30,
+              height: 30,
+              child: CircularProgressIndicator(),
+            ),
+          )
         : Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

@@ -36,9 +36,13 @@ class FavoritesNotifier extends StateNotifier<FavoritesState> {
   }
 
   void _updateFavoritesDB(List<String> jokeList) {
-    _databaseRef.child(_uid).update({
-      'favorites': jokeList,
-    });
+    try {
+      _databaseRef.child(_uid).update({
+        'favorites': jokeList,
+      });
+    } on FirebaseException catch (e) {
+      print(e);
+    }
   }
 
   void loadFavoritesList() async {
