@@ -5,6 +5,7 @@ One joke at a time that changes by tapping a button or swiping card. App contain
 # Requirements to run app
 
 Initilize firebase using CLI
+
 Run build_runner to generate neccessary files
 
 
