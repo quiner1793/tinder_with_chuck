@@ -25,8 +25,8 @@ final favoritesProvider =
         (ref) => FavoritesNotifier());
 
 class FavoritesNotifier extends StateNotifier<FavoritesState> {
-  late final DatabaseReference _databaseRef;
-  late final String _uid;
+  DatabaseReference? _databaseRef;
+  String? _uid;
 
   FavoritesNotifier() : super(FavoritesState()) {
     _uid = FirebaseAuth.instance.currentUser!.uid;
@@ -35,9 +35,17 @@ class FavoritesNotifier extends StateNotifier<FavoritesState> {
     loadFavoritesList();
   }
 
+  void reInitAuthState() {
+    _uid = FirebaseAuth.instance.currentUser!.uid;
+    _databaseRef = FirebaseDatabase.instance.ref("users");
+    print("Re init $_uid");
+
+    loadFavoritesList();
+  }
+
   void _updateFavoritesDB(List<String> jokeList) {
     try {
-      _databaseRef.child(_uid).update({
+      _databaseRef?.child(_uid!).update({
         'favorites': jokeList,
       });
     } on FirebaseException catch (e) {
@@ -46,31 +54,39 @@ class FavoritesNotifier extends StateNotifier<FavoritesState> {
   }
 
   void loadFavoritesList() async {
-    state = state.copyWith(isLoading: true);
+    if (_databaseRef != null && _uid != null){
+      print("Load favorites for $_uid");
+      state = state.copyWith(isLoading: true);
 
-    try {
-      final snapshot = await _databaseRef.child("$_uid/favorites").get();
+      try {
+        final snapshot = await _databaseRef!.child("$_uid/favorites").get();
 
-      if (snapshot.exists) {
-        List<dynamic> favorites = json.decode(jsonEncode(snapshot.value));
-        List<String> favoritesList =
-            favorites.map((e) => e.toString()).toList();
-        state = state.copyWith(jokes: favoritesList);
-      } else {
-        _updateFavoritesDB([]);
+        if (snapshot.exists) {
+          List<dynamic> favorites = json.decode(jsonEncode(snapshot.value));
+          List<String> favoritesList =
+          favorites.map((e) => e.toString()).toList();
+          state = state.copyWith(jokes: favoritesList);
+        } else {
+          _updateFavoritesDB([]);
+          state = state.copyWith(jokes: []);
+        }
+      } on FirebaseException catch (e) {
+        print(e);
       }
-    } on FirebaseException catch (e) {
-      print(e);
+      state = state.copyWith(isLoading: false);
+    } else {
+      throw Exception("Firebase auth state not initialized");
     }
-    state = state.copyWith(isLoading: false);
   }
 
   void addFavorite(JokeCard card) {
     if (card.jokeModel.text != null) {
       state = state.copyWith(isLoading: true);
 
-      List<String> jokes = [for (final joke in state.jokes) joke];
-      jokes.add(card.jokeModel.text!);
+      List<String> jokes = [card.jokeModel.text!];
+      for (final joke in state.jokes) {
+        jokes.add(joke);
+      }
       _updateFavoritesDB(jokes);
 
       state = state.copyWith(isLoading: false, jokes: jokes);
