@@ -38,7 +38,6 @@ class FavoritesNotifier extends StateNotifier<FavoritesState> {
   void reInitAuthState() {
     _uid = FirebaseAuth.instance.currentUser!.uid;
     _databaseRef = FirebaseDatabase.instance.ref("users");
-    print("Re init $_uid");
 
     loadFavoritesList();
   }
@@ -55,7 +54,6 @@ class FavoritesNotifier extends StateNotifier<FavoritesState> {
 
   void loadFavoritesList() async {
     if (_databaseRef != null && _uid != null){
-      print("Load favorites for $_uid");
       state = state.copyWith(isLoading: true);
 
       try {
