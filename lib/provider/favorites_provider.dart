@@ -85,8 +85,8 @@ class FavoritesNotifier extends StateNotifier<FavoritesState> {
       for (final joke in state.jokes) {
         jokes.add(joke);
       }
-      _updateFavoritesDB(jokes);
 
+      _updateFavoritesDB(jokes);
       state = state.copyWith(isLoading: false, jokes: jokes);
     }
   }
@@ -99,8 +99,8 @@ class FavoritesNotifier extends StateNotifier<FavoritesState> {
         jokes.add(joke);
       }
     }
-    _updateFavoritesDB(jokes);
 
+    _updateFavoritesDB(jokes);
     state = state.copyWith(isLoading: false, jokes: jokes);
   }
 }

@@ -38,80 +38,91 @@ class JokePage extends ConsumerWidget {
     for (var categoryIndx = 0;
         categoryIndx < categoryList.length;
         categoryIndx++) {
-      menuList.add(PopupMenuItem(
-        child: Text(categoryList[categoryIndx]),
-        onTap: () => {
-          ref
-              .read(jokesProvider.notifier)
-              .changeCurrentCategory(categoryList[categoryIndx])
-        },
-      ));
+      menuList.add(
+        PopupMenuItem(
+          child: Text(categoryList[categoryIndx]),
+          onTap: () => {
+            ref
+                .read(jokesProvider.notifier)
+                .changeCurrentCategory(categoryList[categoryIndx]),
+          },
+        ),
+      );
     }
 
-    return isLoading
-        ? Center(
-            child: SizedBox(
-              width: 30,
-              height: 30,
-              child: CircularProgressIndicator(),
-            ),
-          )
-        : CupertinoPageScaffold(
-            child: Column(
-              children: [
-                const SizedBox(
-                  height: 50,
+    return CupertinoPageScaffold(
+      child: Column(
+        children: [
+          const SizedBox(
+            height: 50,
+          ),
+          Row(
+            children: [
+              PopupMenuButton<int>(
+                itemBuilder: (context) => menuList,
+                icon: Icon(Icons.menu),
+                constraints: const BoxConstraints(
+                  maxHeight: 5.0 * 56.0,
                 ),
-                Row(
-                  children: [
-                    PopupMenuButton<int>(
-                      itemBuilder: (context) => menuList,
-                      icon: Icon(Icons.menu),
-                      constraints: const BoxConstraints(
-                        maxHeight: 5.0 * 56.0,
-                      ),
-                    ),
-                    Text("Category: $currentCategory"),
-                    Spacer(),
-                    IconButton(onPressed: _signOut, icon: Icon(Icons.logout)),
-                  ],
-                ),
-                Expanded(
-                  child: SizedBox(
-                    height: MediaQuery.of(context).size.height * 0.75,
-                    child: CardSwiper(
-                      controller: cardsSwiperController,
-                      cards: cards,
-                      onSwipe: (int index, CardSwiperDirection direction) {
-                        _swipeJoke(index, direction, ref);
-                      },
-                      isVerticalSwipingEnabled: false,
-                      isLoop: true,
-                      padding: const EdgeInsets.only(
-                        left: 25,
-                        right: 25,
-                        top: 50,
-                        bottom: 40,
-                      ),
+              ),
+              Text("Category: $currentCategory"),
+              Spacer(),
+              IconButton(
+                onPressed: _signOut,
+                icon: Icon(Icons.logout),
+              ),
+            ],
+          ),
+          isLoading
+              ? Expanded(
+                  child: Center(
+                    child: SizedBox(
+                      width: 30,
+                      height: 30,
+                      child: CircularProgressIndicator(),
                     ),
                   ),
+                )
+              : Expanded(
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height * 0.7,
+                        child: CardSwiper(
+                          controller: cardsSwiperController,
+                          cards: cards,
+                          onSwipe: (int index, CardSwiperDirection direction) {
+                            _swipeJoke(index, direction, ref);
+                          },
+                          isVerticalSwipingEnabled: false,
+                          isLoop: true,
+                          padding: const EdgeInsets.only(
+                            left: 25,
+                            right: 25,
+                            top: 50,
+                            bottom: 40,
+                          ),
+                        ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          FloatingActionButton(
+                              onPressed: cardsSwiperController.swipeLeft,
+                              child: const Icon(Icons.close)),
+                          FloatingActionButton(
+                              onPressed: cardsSwiperController.swipeRight,
+                              child: const Icon(Icons.favorite)),
+                        ],
+                      ),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                    ],
+                  ),
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    FloatingActionButton(
-                        onPressed: cardsSwiperController.swipeLeft,
-                        child: const Icon(Icons.close)),
-                    FloatingActionButton(
-                        onPressed: cardsSwiperController.swipeRight,
-                        child: const Icon(Icons.favorite)),
-                  ],
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-              ],
-            ),
-          );
+        ],
+      ),
+    );
   }
 }

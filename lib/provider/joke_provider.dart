@@ -33,6 +33,7 @@ class JokeNotifier extends StateNotifier<JokeState> {
   final _jokeListLength = 10;
 
   JokeNotifier() : super(JokeState()) {
+    state = state.copyWith(isLoading: true);
     loadCategoriesList();
     loadJokeList("all");
   }
@@ -63,11 +64,10 @@ class JokeNotifier extends StateNotifier<JokeState> {
 
         jokes.add(getJokeCard(currentJokeModel));
       }
+      state = state.copyWith(jokes: jokes, isLoading: false);
     } on Exception catch (e) {
       print(e);
     }
-
-    state = state.copyWith(jokes: jokes, isLoading: false);
   }
 
   void loadCategoriesList() async {
@@ -81,11 +81,11 @@ class JokeNotifier extends StateNotifier<JokeState> {
 
       List<String> temp = json.decode(result.body).cast<String>().toList();
       categories.addAll(temp);
+
+      state = state.copyWith(jokeCategories: categories);
     } on Exception catch (e) {
       print(e);
     }
-
-    state = state.copyWith(jokeCategories: categories);
   }
 
   void changeCurrentCategory(String category) async {
@@ -112,11 +112,11 @@ class JokeNotifier extends StateNotifier<JokeState> {
         var currentJokeModel = JokeModel.fromJson(data).value;
 
         jokes[index] = getJokeCard(currentJokeModel);
+        state = state.copyWith(isLoading: false, jokes: jokes);
       } on Exception catch (e) {
+        state = state.copyWith(isLoading: true);
         print(e);
       }
-
-      state = state.copyWith(isLoading: false, jokes: jokes);
     }
   }
 }
