@@ -87,7 +87,7 @@ class JokePage extends ConsumerWidget {
                   child: Column(
                     children: [
                       SizedBox(
-                        height: MediaQuery.of(context).size.height * 0.7,
+                        height: MediaQuery.of(context).size.height * 0.6,
                         child: CardSwiper(
                           controller: cardsSwiperController,
                           cards: cards,
@@ -99,7 +99,7 @@ class JokePage extends ConsumerWidget {
                           padding: const EdgeInsets.only(
                             left: 25,
                             right: 25,
-                            top: 50,
+                            top: 20,
                             bottom: 40,
                           ),
                         ),
@@ -114,9 +114,6 @@ class JokePage extends ConsumerWidget {
                               onPressed: cardsSwiperController.swipeRight,
                               child: const Icon(Icons.favorite)),
                         ],
-                      ),
-                      const SizedBox(
-                        height: 10,
                       ),
                     ],
                   ),
