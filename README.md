@@ -2,11 +2,17 @@
 
 One joke at a time that changes by tapping a button or swiping card. App contains 4 pages: authentication page, personal info page, joke page and list of favorite jokes. You can add jokes to list using swipe or pressing button. Also, you can delete jokes from list of favorites page. The jokes are stored in cloud storage, so you can view them from multiple devices.
 
-# Requirements to run app
+# Requirements to run app in IDE
 
 Initilize firebase using CLI
 
 Run build_runner to generate neccessary files
+
+# Test app on android/ios
+
+APK file for andriod is in root folder
+
+For ios you can use TestFlight. Link: https://testflight.apple.com/v1/invite/d7a3754d472449ee8cd983ddc5082a41cf120ae969e243c38c15c8718684e3481804af575?ct=4FV5WJHF4V&advp=10000&platform=ios
 
 
 # Screenshots 
