@@ -12,7 +12,7 @@ Run build_runner to generate neccessary files
 
 APK file for andriod is in root folder
 
-For ios you can use TestFlight. Link: https://testflight.apple.com/v1/invite/d7a3754d472449ee8cd983ddc5082a41cf120ae969e243c38c15c8718684e3481804af575?ct=4FV5WJHF4V&advp=10000&platform=ios
+For ios you can use TestFlight. Link: https://testflight.apple.com/join/zi3rvV7x
 
 
 # Screenshots 
